@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..3) {
             Thread {
                 while (true) {
-                    val msg = Message()
+                    val msg = Message.obtain()
                     msg.what = 1
                     synchronized(UUID::class.java) { msg.obj = currentThread().name + ",send message:" + UUID.randomUUID().toString() }
                     Log.d(Tag, "send:$msg")

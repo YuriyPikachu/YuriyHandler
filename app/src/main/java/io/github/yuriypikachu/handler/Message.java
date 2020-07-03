@@ -11,13 +11,30 @@ import org.jetbrains.annotations.NotNull;
 public class Message {
 
     YuriyHandler target;
+
     public int what;
     public Object obj;
+    private static Message sPool;
+    Message next;
+    /** @hide */
+    public static final Object sPoolSync = new Object();
 
     @Override
     @NotNull
     public String toString(){
         return obj.toString();
+    }
+
+    public static Message obtain() {
+        synchronized (sPoolSync) {
+            if (sPool != null) {
+                Message m = sPool;
+                sPool = m.next;
+                m.next = null;
+                return m;
+            }
+        }
+        return new Message();
     }
 
 }
