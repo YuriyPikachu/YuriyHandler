@@ -3,7 +3,7 @@ package io.github.yuriypikachu.handler;
 /**
  * @author YuLiang
  * update  2020/7/3
- * <a href="beiming@webuy.ai">Contact me</a>
+ * <a href="YuriyPikachu.github.io">Contact me</a>
  */
 
 public class YuriyHandler {

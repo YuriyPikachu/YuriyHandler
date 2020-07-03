@@ -1,6 +1,7 @@
 package io.github.yuriypikachu.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import io.github.yuriypikachu.handler.Looper
 import io.github.yuriypikachu.handler.Message
@@ -12,6 +13,11 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    companion object{
+        const val Tag = "YuriyPikachu.github.io"
+    }
+
+    private var handler:YuriyHandler?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Looper.perpare();
@@ -19,20 +25,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val handler = object : YuriyHandler() {
-            override fun handleMessage(msg: Message) {
-                super.handleMessage(msg)
-                println(Thread.currentThread().name + ",received:" + msg.toString())
-            }
-        }
-        for (i in 0..1) {
+        receiveMsgByMain()
+        sendMsgByThread()
+
+        Looper.loop()
+    }
+
+    private fun sendMsgByThread(){
+        for (i in 0..3) {
             Thread {
                 while (true) {
                     val msg = Message()
                     msg.what = 1
                     synchronized(UUID::class.java) { msg.obj = currentThread().name + ",send message:" + UUID.randomUUID().toString() }
-                    System.out.println(msg)
-                    handler.sendMessage(msg)
+                    Log.d(Tag, "send:$msg")
+                    handler?.sendMessage(msg)
                     try {
                         sleep(1000)
                     } catch (e: InterruptedException) {
@@ -42,7 +49,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }.start()
         }
+    }
 
-        Looper.loop()
+    private fun receiveMsgByMain(){
+        handler = object : YuriyHandler() {
+            override fun handleMessage(msg: Message) {
+                super.handleMessage(msg)
+                Log.d(Tag, "received:$msg")
+            }
+        }
     }
 }

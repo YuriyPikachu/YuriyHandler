@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author YuLiang
  * update  2020/7/3
- * <a href="beiming@webuy.ai">Contact me</a>
+ * <a href="YuriyPikachu.github.io">Contact me</a>
  */
 public class MessageQueue {
 
@@ -40,8 +40,8 @@ public class MessageQueue {
      *
      * */
     public void enqueueMessage(Message msg){
+        lock.lock();
         try {
-            lock.lock();
             //消息队列满了，子线程停止发送消息，阻塞
             while(count == items.length){
                 try {
@@ -69,9 +69,9 @@ public class MessageQueue {
      * */
     public Message next(){
         //消息队列为空，主线程停止轮询，阻塞
-        Message msg = null;
+        Message msg;
+        lock.lock();
         try {
-            lock.lock();
             while(count==0){
                 try {
                     notEmpty.await();
@@ -88,7 +88,6 @@ public class MessageQueue {
             //使用了一个Message对象，通知子线程，可以继续生产了
             notFull.signal();
         } finally {
-            // TODO: handle exception
             lock.unlock();
         }
 
