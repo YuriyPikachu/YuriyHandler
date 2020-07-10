@@ -13,11 +13,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    companion object{
-        const val Tag = "YuriyPikachu.github.io"
-    }
+    val Tag = "YuriyPikachu.github.io"
 
-    private var handler:YuriyHandler?=null
+    private var handler: YuriyHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Looper.perpare();
@@ -31,13 +29,16 @@ class MainActivity : AppCompatActivity() {
         Looper.loop()
     }
 
-    private fun sendMsgByThread(){
-        for (i in 0..3) {
+    private fun sendMsgByThread() {
+        repeat(3) {
             Thread {
                 while (true) {
                     val msg = Message.obtain()
                     msg.what = 1
-                    synchronized(UUID::class.java) { msg.obj = currentThread().name + ",send message:" + UUID.randomUUID().toString() }
+                    synchronized(UUID::class.java) {
+                        msg.obj =
+                            currentThread().name + ",send message:" + UUID.randomUUID().toString()
+                    }
                     Log.d(Tag, "send:$msg")
                     handler?.sendMessage(msg)
                     try {
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun receiveMsgByMain(){
+    private fun receiveMsgByMain() {
         handler = object : YuriyHandler() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)

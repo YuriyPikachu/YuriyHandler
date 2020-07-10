@@ -9,7 +9,7 @@ package io.github.yuriypikachu.handler;
 public final class Looper {
 
     //每一个主线程都会有一个Looper
-    //Looer 对象保存在ThreaLocal
+    //Looper 对象保存在ThreadLocal
     static final ThreadLocal<Looper> sThreadLocal = new ThreadLocal<>();
 
     //一个Looper对象，对应一个消息队列
